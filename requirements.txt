@@ -1,0 +1,22 @@
+# Smart Event Scheduler - Python Requirements
+# 
+# This project uses only Python standard library modules.
+# No external dependencies are required.
+# 
+# Python Version: 3.7+
+# 
+# Standard Library Modules Used:
+# - tkinter (GUI framework)
+# - json (data serialization)
+# - datetime (time handling)
+# - typing (type hints)
+# - math (mathematical operations)
+#
+# Installation:
+# Python 3.7+ comes with all required modules by default.
+# 
+# For systems without Tkinter (rare):
+# - Ubuntu/Debian: sudo apt-get install python3-tk
+# - Fedora: sudo dnf install python3-tkinter
+# - macOS: Included with Python
+# - Windows: Included with Python

@@ -1,0 +1,66 @@
+{
+  "events": [
+    {
+      "name": "Team Standup",
+      "start_time": 9.0,
+      "end_time": 9.5,
+      "event_id": 1
+    },
+    {
+      "name": "Project Alpha Review",
+      "start_time": 9.25,
+      "end_time": 10.5,
+      "event_id": 2
+    },
+    {
+      "name": "Client Call - Beta",
+      "start_time": 10.0,
+      "end_time": 11.0,
+      "event_id": 3
+    },
+    {
+      "name": "Design Discussion",
+      "start_time": 10.5,
+      "end_time": 12.0,
+      "event_id": 4
+    },
+    {
+      "name": "Budget Planning",
+      "start_time": 11.0,
+      "end_time": 12.5,
+      "event_id": 5
+    },
+    {
+      "name": "Lunch Meeting",
+      "start_time": 12.0,
+      "end_time": 13.0,
+      "event_id": 6
+    },
+    {
+      "name": "Sprint Planning",
+      "start_time": 13.0,
+      "end_time": 14.5,
+      "event_id": 7
+    },
+    {
+      "name": "Code Review",
+      "start_time": 14.0,
+      "end_time": 15.0,
+      "event_id": 8
+    },
+    {
+      "name": "Marketing Sync",
+      "start_time": 14.5,
+      "end_time": 15.5,
+      "event_id": 9
+    },
+    {
+      "name": "Executive Briefing",
+      "start_time": 15.0,
+      "end_time": 16.0,
+      "event_id": 10
+    }
+  ],
+  "selected": [],
+  "rejected": []
+}
