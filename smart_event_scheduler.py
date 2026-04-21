@@ -1,10 +1,7 @@
-# Smart Event Scheduler
-
 import tkinter as tk
 from tkinter import messagebox
 
-# ----------------- EVENT CLASS -----------------
-
+# ---------- EVENT ----------
 class Event:
     def __init__(self, name, start, end):
         self.name = name
@@ -12,14 +9,12 @@ class Event:
         self.end = end
 
 
-# ----------------- GREEDY ALGORITHM -----------------
-
+# ---------- GREEDY ----------
 def greedy_schedule(events):
     events.sort(key=lambda x: x.end)
-
     selected = []
 
-    if len(events) == 0:
+    if not events:
         return selected
 
     selected.append(events[0])
@@ -33,74 +28,98 @@ def greedy_schedule(events):
     return selected
 
 
-# ----------------- MAIN APP -----------------
-
+# ---------- APP ----------
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("Smart Event Scheduler")
-        self.root.geometry("700x500")
+        self.root.title("Smart Event Scheduler ✨")
+        self.root.geometry("750x550")
+        self.root.config(bg="#1e1e2f")
 
         self.events = []
 
-        # -------- INPUT --------
+        # ---------- TITLE ----------
+        tk.Label(root, text="Smart Event Scheduler",
+                 font=("Arial", 20, "bold"),
+                 fg="#00ffcc", bg="#1e1e2f").pack(pady=10)
 
-        frame = tk.Frame(root)
-        frame.pack(pady=10)
+        # ---------- INPUT CARD ----------
+        frame = tk.Frame(root, bg="#2c2c3e", bd=2, relief="ridge")
+        frame.pack(pady=10, padx=20, fill="x")
 
-        tk.Label(frame, text="Event Name").grid(row=0, column=0)
-        tk.Label(frame, text="Start").grid(row=0, column=1)
-        tk.Label(frame, text="End").grid(row=0, column=2)
+        tk.Label(frame, text="Event Name", fg="white", bg="#2c2c3e").grid(row=0, column=0, padx=10, pady=5)
+        tk.Label(frame, text="Start (1-24)", fg="white", bg="#2c2c3e").grid(row=0, column=1)
+        tk.Label(frame, text="End (1-24)", fg="white", bg="#2c2c3e").grid(row=0, column=2)
 
-        self.name_entry = tk.Entry(frame)
-        self.start_entry = tk.Entry(frame)
-        self.end_entry = tk.Entry(frame)
+        self.name_entry = tk.Entry(frame, width=20)
+        self.start_entry = tk.Entry(frame, width=10)
+        self.end_entry = tk.Entry(frame, width=10)
 
-        self.name_entry.grid(row=1, column=0)
+        self.name_entry.grid(row=1, column=0, padx=10, pady=5)
         self.start_entry.grid(row=1, column=1)
         self.end_entry.grid(row=1, column=2)
 
-        tk.Button(frame, text="Add Event", command=self.add_event).grid(row=1, column=3, padx=10)
+        tk.Button(frame, text="➕ Add",
+                  bg="#00ffcc", fg="black",
+                  command=self.add_event).grid(row=1, column=3, padx=10)
 
-        # -------- LIST --------
+        # ---------- LIST ----------
+        list_frame = tk.Frame(root, bg="#1e1e2f")
+        list_frame.pack(pady=10)
 
-        self.listbox = tk.Listbox(root, width=80)
-        self.listbox.pack(pady=10)
-
-        # Load saved events AFTER listbox is created
+        self.listbox = tk.Listbox(list_frame, width=80, height=10,
+                                 bg="#2c2c3e", fg="white",
+                                 selectbackground="#00ffcc")
+        self.listbox.pack()
 
         self.load_events()
 
-        # -------- BUTTONS --------
+        # ---------- BUTTONS ----------
+        btn_frame = tk.Frame(root, bg="#1e1e2f")
+        btn_frame.pack(pady=10)
 
-        btn_frame = tk.Frame(root)
-        btn_frame.pack()
+        tk.Button(btn_frame, text="▶ Run",
+                  bg="#00cc99", width=12,
+                  command=self.run_algo).grid(row=0, column=0, padx=5)
 
-        tk.Button(btn_frame, text="Run Algorithm", command=self.run_algo).pack(side=tk.LEFT, padx=10)
-        tk.Button(btn_frame, text="Delete Selected", command=self.delete_event).pack(side=tk.LEFT, padx=10)
-        tk.Button(btn_frame, text="Reset", command=self.reset).pack(side=tk.LEFT, padx=10)
+        tk.Button(btn_frame, text="🗑 Delete",
+                  bg="#ff4d4d", width=12,
+                  command=self.delete_event).grid(row=0, column=1, padx=5)
 
-        # -------- RESULT --------
+        tk.Button(btn_frame, text="🔄 Reset",
+                  bg="#ffaa00", width=12,
+                  command=self.reset).grid(row=0, column=2, padx=5)
 
-        self.result_label = tk.Label(root, text="", fg="green")
+        # ---------- RESULT ----------
+        self.result_label = tk.Label(root, text="",
+                                     fg="#00ffcc",
+                                     bg="#1e1e2f",
+                                     font=("Arial", 11))
         self.result_label.pack(pady=10)
 
-    # ----------------- FUNCTIONS -----------------
-
+    # ---------- ADD EVENT ----------
     def add_event(self):
         try:
-            name = self.name_entry.get()
+            name = self.name_entry.get().strip()
             start = float(self.start_entry.get())
             end = float(self.end_entry.get())
 
-            if name == "" or start >= end:
-                messagebox.showerror("Error", "Invalid input")
+            if name == "":
+                messagebox.showerror("Error", "Enter event name")
+                return
+
+            if start < 1 or start > 24 or end < 1 or end > 24:
+                messagebox.showerror("Error", "Time must be 1 to 24")
+                return
+
+            if start >= end:
+                messagebox.showerror("Error", "Start must be < End")
                 return
 
             event = Event(name, start, end)
             self.events.append(event)
 
-            self.listbox.insert(tk.END, f"{name} ({start} - {end})")
+            self.listbox.insert(tk.END, f"{name}  ({start} - {end})")
 
             self.save_events()
 
@@ -111,6 +130,7 @@ class App:
         except:
             messagebox.showerror("Error", "Enter valid numbers")
 
+    # ---------- DELETE ----------
     def delete_event(self):
         try:
             index = self.listbox.curselection()[0]
@@ -118,29 +138,30 @@ class App:
             self.events.pop(index)
             self.save_events()
         except:
-            messagebox.showwarning("Warning", "Select an event to delete")
+            messagebox.showwarning("Warning", "Select event")
 
+    # ---------- RUN ----------
     def run_algo(self):
-        if len(self.events) == 0:
-            messagebox.showinfo("Info", "No events added")
+        if not self.events:
+            messagebox.showinfo("Info", "No events")
             return
 
         selected = greedy_schedule(self.events)
 
-        result_text = "Selected Events:\n"
+        text = "✨ Optimal Schedule:\n"
         for e in selected:
-            result_text += f"{e.name} ({e.start}-{e.end})\n"
+            text += f"✔ {e.name} ({e.start}-{e.end})\n"
 
-        self.result_label.config(text=result_text)
+        self.result_label.config(text=text)
 
+    # ---------- RESET ----------
     def reset(self):
         self.events.clear()
         self.listbox.delete(0, tk.END)
         self.result_label.config(text="")
         self.save_events()
 
-    # ----------------- FILE HANDLING -----------------
-
+    # ---------- FILE ----------
     def save_events(self):
         try:
             with open("events.txt", "w") as f:
@@ -153,18 +174,15 @@ class App:
         try:
             with open("events.txt", "r") as f:
                 for line in f:
-                    parts = line.strip().split(",")
-                    if len(parts) == 3:
-                        name, start, end = parts
-                        event = Event(name, float(start), float(end))
-                        self.events.append(event)
-                        self.listbox.insert(tk.END, f"{name} ({start} - {end})")
-        except FileNotFoundError:
+                    name, start, end = line.strip().split(",")
+                    event = Event(name, float(start), float(end))
+                    self.events.append(event)
+                    self.listbox.insert(tk.END, f"{name} ({start}-{end})")
+        except:
             pass
 
 
-# ----------------- RUN -----------------
-
+# ---------- RUN ----------
 root = tk.Tk()
 app = App(root)
 root.mainloop()
