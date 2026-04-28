@@ -96,7 +96,7 @@ class App :
                 messagebox.showerror("Error", "Invalid input")
                 return
 
-            event = Event(name , start , end)
+            event = Event(name, start , end)
             self.events.append(event)
 
             self.listbox.insert(tk.END, f"{name} ({start} - {end})")
