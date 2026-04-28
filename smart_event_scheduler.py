@@ -2,16 +2,17 @@ import tkinter as tk
 from tkinter import messagebox
 
 # ---------- EVENT ----------
-class Event:
-    def __init__(self, name, start, end):
+
+class Event :
+    def __init__(self , name, start, end):
         self.name = name
         self.start = start
         self.end = end
 
-
 # ---------- GREEDY ----------
+
 def greedy_schedule(events):
-    events.sort(key=lambda x: x.end)
+    events.sort(key = lambda x: x.end)
     selected = []
 
     if not events:
@@ -29,7 +30,8 @@ def greedy_schedule(events):
 
 
 # ---------- APP ----------
-class App:
+
+class App :
     def __init__(self, root):
         self.root = root
         self.root.title("Smart Event Scheduler ✨")
@@ -39,6 +41,7 @@ class App:
         self.events = []
 
         # ---------- TITLE ----------
+
         tk.Label(root, text="Smart Event Scheduler",
                  font=("Arial", 20, "bold"),
                  fg="#00ffcc", bg="#1e1e2f").pack(pady=10)
@@ -64,6 +67,7 @@ class App:
                   command=self.add_event).grid(row=1, column=3, padx=10)
 
         # ---------- LIST ----------
+
         list_frame = tk.Frame(root, bg="#1e1e2f")
         list_frame.pack(pady=10)
 
@@ -75,6 +79,7 @@ class App:
         self.load_events()
 
         # ---------- BUTTONS ----------
+
         btn_frame = tk.Frame(root, bg="#1e1e2f")
         btn_frame.pack(pady=10)
 
@@ -91,6 +96,7 @@ class App:
                   command=self.reset).grid(row=0, column=2, padx=5)
 
         # ---------- RESULT ----------
+
         self.result_label = tk.Label(root, text="",
                                      fg="#00ffcc",
                                      bg="#1e1e2f",
@@ -98,13 +104,13 @@ class App:
         self.result_label.pack(pady=10)
 
     # ---------- ADD EVENT ----------
-    def add_event(self):
-        try:
+    
+    def add_event(self) :
+        try :
             name = self.name_entry.get().strip()
             start_text = self.start_entry.get().strip()
             end_text = self.end_entry.get().strip()
 
-            # Reset colors
             self.start_entry.config(bg="white")
             self.end_entry.config(bg="white")
 
@@ -119,22 +125,47 @@ class App:
             start = float(start_text)
             end = float(end_text)
 
-            # Range check
-            if not (1 <= start <= 24):
+            # ----------- SPLIT HOURS & MINUTES -----------
+
+            sh = int(start)
+            sm = int(round((start - sh) * 100))
+
+            eh = int(end)
+            em = int(round((end - eh) * 100))
+
+            # ----------- VALIDATION -----------
+
+            if not (1 <= sh <= 24):
                 self.start_entry.config(bg="#ffcccc")
-                messagebox.showerror("Invalid Time", "⛔ Start time must be between 1 and 24")
+                messagebox.showerror("Invalid Time", "⛔ Start hour must be 1–24")
                 return
 
-            if not (1 <= end <= 24):
+            if not (1 <= eh <= 24):
                 self.end_entry.config(bg="#ffcccc")
-                messagebox.showerror("Invalid Time", "⛔ End time must be between 1 and 24")
+                messagebox.showerror("Invalid Time", "⛔ End hour must be 1–24")
                 return
+
+            # Minute check
+
+            if not (0 <= sm <= 59):
+                self.start_entry.config(bg="#ffcccc")
+                messagebox.showerror("Invalid Time", "⛔ Minutes must be 00–59 (e.g., 10.30)")
+                return
+
+            if not (0 <= em <= 59):
+                self.end_entry.config(bg="#ffcccc")
+                messagebox.showerror("Invalid Time", "⛔ Minutes must be 00–59 (e.g., 14.45)")
+                return
+
+            # Duration check
 
             if start >= end:
                 self.start_entry.config(bg="#ffcccc")
                 self.end_entry.config(bg="#ffcccc")
                 messagebox.showerror("Invalid Duration", "⛔ Start must be less than End")
                 return
+
+            # ----------- ADD EVENT -----------
 
             event = Event(name, start, end)
             self.events.append(event)
@@ -144,24 +175,27 @@ class App:
             self.save_events()
 
             # Clear fields
+
             self.name_entry.delete(0, tk.END)
             self.start_entry.delete(0, tk.END)
             self.end_entry.delete(0, tk.END)
 
         except ValueError:
-            messagebox.showerror("Error", "⚠ Enter valid numeric values (1–24)")
+            messagebox.showerror("Error", "⚠ Enter valid numeric time (e.g., 10.30)")
 
     # ---------- DELETE ----------
+
     def delete_event(self):
-        try:
+        try :
             index = self.listbox.curselection()[0]
             self.listbox.delete(index)
             self.events.pop(index)
             self.save_events()
-        except:
+        except :
             messagebox.showwarning("Warning", "Select event to delete")
 
     # ---------- RUN ----------
+
     def run_algo(self):
         if not self.events:
             messagebox.showinfo("Info", "No events added")
@@ -173,9 +207,10 @@ class App:
         for e in selected:
             text += f"✔ {e.name} ({e.start}-{e.end})\n"
 
-        self.result_label.config(text=text)
+        self.result_label.config(text = text)
 
     # ---------- RESET ----------
+
     def reset(self):
         self.events.clear()
         self.listbox.delete(0, tk.END)
@@ -183,6 +218,7 @@ class App:
         self.save_events()
 
     # ---------- FILE ----------
+    
     def save_events(self):
         try:
             with open("events.txt", "w") as f:
@@ -202,8 +238,8 @@ class App:
         except:
             pass
 
-
 # ---------- RUN ----------
+
 root = tk.Tk()
 app = App(root)
 root.mainloop()
