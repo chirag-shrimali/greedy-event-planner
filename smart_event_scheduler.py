@@ -11,28 +11,29 @@ class Event :
 
 # ---------- GREEDY ----------
 
-def greedy_schedule(events):
-    events.sort(key = lambda x: x.end)
+def greedy_schedule(events) :
+    
+    events.sort(key = lambda x : x.end)
+    
     selected = []
 
-    if not events:
+    if not events :
         return selected
 
     selected.append(events[0])
     last_end = events[0].end
 
-    for i in range(1, len(events)):
-        if events[i].start >= last_end:
+    for i in range(1, len(events)) :
+        if events[i].start >= last_end :
             selected.append(events[i])
             last_end = events[i].end
 
     return selected
 
-
 # ---------- APP ----------
 
 class App :
-    def __init__(self, root):
+    def __init__(self, root) :
         self.root = root
         self.root.title("Smart Event Scheduler ✨")
         self.root.geometry("750x550")
